@@ -15,6 +15,8 @@ import dynamic from "next/dynamic";
 import { Path, SlotID } from "../constant";
 import { ErrorBoundary } from "./error";
 
+import dd from "dingtalk-jsapi"; // 此方式为整体加载，也可按需进行加载
+
 import {
   HashRouter as Router,
   Routes,
@@ -23,6 +25,11 @@ import {
 } from "react-router-dom";
 import { SideBar } from "./sidebar";
 import { useAppConfig } from "../store/config";
+import { useMaskStore } from "../store/mask";
+import { useAccessStore } from "../store/access";
+
+import { Login } from "./login";
+import { showToast } from "./ui-lib";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -135,6 +142,8 @@ function Screen() {
 }
 
 export function Home() {
+  const accessStore = useAccessStore();
+
   useSwitchTheme();
 
   if (!useHasHydrated()) {
@@ -148,4 +157,72 @@ export function Home() {
       </Router>
     </ErrorBoundary>
   );
+
+  console.log("[dingding platform]", dd.env.platform);
+  if (dd.env.platform !== "notInDingTalk") {
+    if (accessStore.loginToken.length == 0) {
+      dd.ready(function () {
+        dd.runtime.permission
+          .requestAuthCode({ corpId: "dingff4418450cea3cc635c2f4657eb6378f" })
+          .then((res) => {
+            console.log("code=", res.code);
+
+            let loginPath = "/api/login?code=" + res.code + "&code=" + res.code;
+            fetch(loginPath, {
+              method: "get",
+            })
+              .then((res) => res.json())
+              .then((res) => {
+                let result = JSON.parse(res);
+                console.log("[home result]", result);
+
+                if (result.errcode == 0) {
+                  console.log("[=====]", result.result.name);
+                  accessStore.updateLoginToken(result.result.name);
+                  // window.location.reload();
+                }
+                // showToast(result.msg);
+              })
+              .catch((e) => {
+                console.error("[Config] failed to fetch config", e);
+              })
+              .finally(() => {});
+          });
+      });
+
+      return <Loading />;
+    } else {
+      return (
+        <ErrorBoundary>
+          <Router>
+            <Screen />
+          </Router>
+        </ErrorBoundary>
+      );
+    }
+  } else {
+    showToast("已经集成在钉钉应用中，请在钉钉中使用");
+    return (
+      <>
+        <Loading />
+      </>
+    );
+  }
+
+  //  if(accessStore.loginToken.length == 0){
+  //     return (
+  //       <>
+  //         <Login />
+
+  //       </>
+  //     );
+  //   }else{
+  //     return (
+  //       <ErrorBoundary>
+  //         <Router>
+  //           <Screen />
+  //         </Router>
+  //       </ErrorBoundary>
+  //     );
+  //   }
 }

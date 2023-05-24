@@ -1,0 +1,37 @@
+.header {
+    height: 20vh;
+    border-bottom: 5px solid #92b1d4;
+    background-size: cover;
+  }
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 72vh;
+    width: 100%;
+    background-size: cover;
+  }
+  .container .login-form {
+    width: 500px;
+    margin-bottom: 10%;
+    margin-left: 50%;
+    text-align: left;
+  }
+  .container .button_reg {
+    margin-left: 65px;
+  }
+
+ 
+ 
+  
+  .bottom {
+    height: 100px;
+    position: fixed;
+    width: 100%;
+    bottom: 0px;
+    background: linear-gradient(to bottom, #e8fce3, #ffffff);
+    border-top: 5px solid #eadfd3;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+  }
