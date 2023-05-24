@@ -39,7 +39,7 @@ export function Login() {
     let password = values.password;
 
     let loginPath =
-      "/api/login?name=" + email + "&pwd=" + password + "&name=" + email;
+      "/api/normalLogin?name=" + email + "&pwd=" + password + "&name=" + email;
     fetch(loginPath, {
       method: "get",
     })
@@ -49,7 +49,7 @@ export function Login() {
         console.log(result);
 
         if (result.code == 200) {
-          accessStore.updateLoginToken(result.data.token);
+          accessStore.updateLoginToken("zhengwu");
 
           window.location.reload();
         }

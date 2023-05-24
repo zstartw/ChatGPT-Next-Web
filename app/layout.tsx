@@ -33,8 +33,10 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="version" content={buildConfig.commitId} />
+        <meta name="wpk-bid" content="dta_1_2587851622"></meta>
         <link rel="manifest" href="/site.webmanifest"></link>
         <script src="/serviceWorkerRegister.js" defer></script>
+        <script>this.globalThis || (this.globalThis = this)</script>
       </head>
       <body>{children}</body>
     </html>

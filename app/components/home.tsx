@@ -105,6 +105,32 @@ const loadAsyncGoogleFont = () => {
   document.head.appendChild(linkEl);
 };
 
+function addDingDebug() {
+  //   const meta = document.createElement('meta');
+  // meta.setAttribute('name', 'wpk-bid');
+  // meta.setAttribute('content', 'dta_1_2587851622');
+  // document.head.appendChild(meta);
+
+  const script = document.createElement("script");
+  script.innerHTML = `
+  var isDingtalk = navigator && /DingTalk/.test(navigator.userAgent);
+  var isProductEnv = window &&window.location &&window.location.host 
+      && window.location.host.indexOf('127.0.0.1')===-1
+      && window.location.host.indexOf('localhost')===-1
+      && window.location.host.indexOf('192.168.')===-1
+      // 如果有其它测试域名，请一起排掉，减少测试环境对生产环境监控的干扰
+  if (isProductEnv) {    !(function(c,i,e,b){var h=i.createElement("script");
+  var f=i.getElementsByTagName("script")[0];
+  h.type="text/javascript";
+  h.crossorigin=true;
+  h.onload=function(){c[b]||(c[b]=new c.wpkReporter({bid:"dta_1_2587851622"}));
+  c[b].installAll()};
+  f.parentNode.insertBefore(h,f);
+  h.src=e})(window,document,"https://g.alicdn.com/woodpeckerx/jssdk??wpkReporter.js","__wpk");
+  }`;
+  document.head.appendChild(script);
+}
+
 function Screen() {
   const config = useAppConfig();
   const location = useLocation();
@@ -145,6 +171,10 @@ export function Home() {
   const accessStore = useAccessStore();
 
   useSwitchTheme();
+
+  useEffect(() => {
+    addDingDebug();
+  }, []);
 
   if (!useHasHydrated()) {
     return <Loading />;
@@ -194,27 +224,20 @@ export function Home() {
     }
   } else {
     showToast("已经集成在钉钉应用中，请在钉钉中使用");
-    return (
-      <>
-        <Loading />
-      </>
-    );
+    if (accessStore.loginToken.length == 0) {
+      return (
+        <>
+          <Loading />
+        </>
+      );
+    } else {
+      return (
+        <ErrorBoundary>
+          <Router>
+            <Screen />
+          </Router>
+        </ErrorBoundary>
+      );
+    }
   }
-
-  //  if(accessStore.loginToken.length == 0){
-  //     return (
-  //       <>
-  //         <Login />
-
-  //       </>
-  //     );
-  //   }else{
-  //     return (
-  //       <ErrorBoundary>
-  //         <Router>
-  //           <Screen />
-  //         </Router>
-  //       </ErrorBoundary>
-  //     );
-  //   }
 }
