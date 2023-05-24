@@ -150,14 +150,6 @@ export function Home() {
     return <Loading />;
   }
 
-  return (
-    <ErrorBoundary>
-      <Router>
-        <Screen />
-      </Router>
-    </ErrorBoundary>
-  );
-
   console.log("[dingding platform]", dd.env.platform);
   if (dd.env.platform !== "notInDingTalk") {
     if (accessStore.loginToken.length == 0) {
