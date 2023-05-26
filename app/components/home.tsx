@@ -223,11 +223,10 @@ export function Home() {
       );
     }
   } else {
-    showToast("已经集成在钉钉应用中，请在钉钉中使用");
     if (accessStore.loginToken.length == 0) {
       return (
         <>
-          <Loading />
+          <Login />
         </>
       );
     } else {

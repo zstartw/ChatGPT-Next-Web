@@ -6,6 +6,8 @@ import SendWhiteIcon from "../icons/send-white.svg";
 import BotIcon from "../icons/bot.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 
+import styles from "./home.module.scss";
+
 import { Link, useNavigate } from "react-router-dom";
 
 import "./login.module.scss";
@@ -64,7 +66,7 @@ export function Login() {
   const App = (
     <Form
       name="basic"
-      initialValues={{ remember: true }}
+      initialValues={{ remember: true, size: "large" }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
@@ -74,7 +76,7 @@ export function Login() {
         name="username"
         rules={[{ required: true, message: "Please input your username!" }]}
       >
-        <Input width={1000} type="email" />
+        <Input size="large" type="email" />
       </Form.Item>
 
       <Form.Item
@@ -82,19 +84,19 @@ export function Login() {
         name="password"
         rules={[{ required: true, message: "Please input your password!" }]}
       >
-        <Input.Password />
+        <Input.Password size="large" className={styles["input"]} />
       </Form.Item>
 
-      <Form.Item
+      {/* <Form.Item
         name="remember"
         valuePropName="checked"
         wrapperCol={{ offset: 8, span: 16 }}
       >
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item>
+        <Checkbox >Remember me</Checkbox>
+      </Form.Item> */}
 
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit">
+        <Button size="large" type="primary" htmlType="submit">
           Submit
         </Button>
       </Form.Item>
